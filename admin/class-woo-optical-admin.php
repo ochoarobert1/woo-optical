@@ -63,47 +63,85 @@ class Woo_Optical_Admin
 			__('Price for Eye Formulas', 'woo-optical'),
 			'manage_options',
 			'custom-optics-settings',
-			[$this, 'woo_optical_settings_page'],
+			[$this, 'displayAdminSettings'],
 			'dashicons-visibility',
 			75
 		);
 	}
 
-	/**
-	 * Method woo_optical_settings_page
-	 *
-	 * @return void
-	 */
-	public function woo_optical_settings_page()
+	public function displayAdminSettings()
 	{
-		if (!current_user_can('manage_options')) {
-			return;
-		}
-
-		if (isset($_GET['settings-updated'])) {
-			add_settings_error('woo_optical_messages', 'woo_optical_message', __('Settings Saved', 'woo-optical'), 'updated');
-		}
-
-		settings_errors('woo_optical_messages');
-?>
-		<div class="wrap">
-			<h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-			<form action="options.php" method="post">
-				<?php
-				settings_fields('woo_optical_prices');
-				do_settings_sections('woo_optical_prices');
-				submit_button(__('Save Settings', 'woo-optical'));
-				?>
-			</form>
-		</div>
-	<?php
+		require_once 'partials/' . $this->plugin_name . '-admin-display.php';
 	}
 
 	/**
-	 * Method woo_optical_prices_section_callback
+	 * Method woo_optical_register_settings
 	 *
 	 * @return void
 	 */
+	public function woo_optical_register_settings()
+	{
+		register_setting(
+			'woo_optical_prices',
+			'woo_optical_price_matrix'
+		);
+
+		add_settings_section(
+			'woo_optical_prices_section',
+			__('Price Matrix', 'woo-optical'),
+			[$this, 'woo_optical_prices_section_callback'],
+			'woo_optical_prices'
+		);
+
+		add_settings_field(
+			'woo_optical_price_matrix_field',
+			__('Prices', 'woo-optical'),
+			[$this, 'woo_optical_price_matrix_field_callback'],
+			'woo_optical_prices',
+			'woo_optical_prices_section'
+		);
+
+		register_setting(
+			'woo_optical_prices',
+			'woo_optical_eje_cost'
+		);
+
+		add_settings_section(
+			'woo_optical_eje_section',
+			__('AXIS Prices', 'woo-optical'),
+			[$this, 'woo_optical_eje_section_callback'],
+			'woo_optical_prices'
+		);
+
+		add_settings_field(
+			'woo_optical_eje_cost_field',
+			__('AXIS Price', 'woo-optical'),
+			[$this, 'woo_optical_eje_cost_field_callback'],
+			'woo_optical_prices',
+			'woo_optical_eje_section'
+		);
+
+		register_setting(
+			'woo_optical_prices',
+			'woo_optical_dp_cost'
+		);
+
+		add_settings_section(
+			'woo_optical_dp_section',
+			__('DP Prices', 'woo-optical'),
+			[$this, 'woo_optical_dp_section_callback'],
+			'woo_optical_prices'
+		);
+
+		add_settings_field(
+			'woo_optical_dp_cost_field',
+			__('DP Price', 'woo-optical'),
+			[$this, 'woo_optical_dp_cost_field_callback'],
+			'woo_optical_prices',
+			'woo_optical_dp_section'
+		);
+	}
+
 	public function woo_optical_prices_section_callback()
 	{
 		_e('Enter the prices for every combination ESF / CIL:', 'woo-optical');
@@ -119,8 +157,8 @@ class Woo_Optical_Admin
 		$price_matrix = get_option('woo_optical_price_matrix');
 		$esf_values = range(-6.00, 6.00, 0.25);
 		$cil_values = range(0.00, 6.00, 0.25);
-	?>
-		<table class="form-table">
+?>
+		<table class="form-table form-custom-table">
 			<tr>
 				<th></th>
 				<?php foreach ($cil_values as $cil) : ?>
@@ -232,74 +270,6 @@ class Woo_Optical_Admin
 	public function woo_optical_get_price_matrix_key($esf, $cil)
 	{
 		return $esf . '_' . $cil;
-	}
-
-	/**
-	 * Method woo_optical_register_settings
-	 *
-	 * @return void
-	 */
-	public function woo_optical_register_settings()
-	{
-		register_setting(
-			'woo_optical_prices',
-			'woo_optical_price_matrix'
-		);
-
-		add_settings_section(
-			'woo_optical_prices_section',
-			__('Price Matrix', 'woo-optical'),
-			[$this, 'woo_optical_prices_section_callback'],
-			'woo_optical_prices'
-		);
-
-		add_settings_field(
-			'woo_optical_price_matrix_field',
-			__('Prices', 'woo-optical'),
-			[$this, 'woo_optical_price_matrix_field_callback'],
-			'woo_optical_prices',
-			'woo_optical_prices_section'
-		);
-
-		register_setting(
-			'woo_optical_prices',
-			'woo_optical_eje_cost'
-		);
-
-		add_settings_section(
-			'woo_optical_eje_section',
-			__('AXIS Prices', 'woo-optical'),
-			[$this, 'woo_optical_eje_section_callback'],
-			'woo_optical_prices'
-		);
-
-		add_settings_field(
-			'woo_optical_eje_cost_field',
-			__('AXIS Price', 'woo-optical'),
-			[$this, 'woo_optical_eje_cost_field_callback'],
-			'woo_optical_prices',
-			'woo_optical_eje_section'
-		);
-
-		register_setting(
-			'woo_optical_prices',
-			'woo_optical_dp_cost'
-		);
-
-		add_settings_section(
-			'woo_optical_dp_section',
-			__('DP Prices', 'woo-optical'),
-			[$this, 'woo_optical_dp_section_callback'],
-			'woo_optical_prices'
-		);
-
-		add_settings_field(
-			'woo_optical_dp_cost_field',
-			__('DP Price', 'woo-optical'),
-			[$this, 'woo_optical_dp_cost_field_callback'],
-			'woo_optical_prices',
-			'woo_optical_dp_section'
-		);
 	}
 
 	/**
