@@ -4,3 +4,11 @@
 /* --------------------------------------------------------------
 VARIABLES
 -------------------------------------------------------------- */
+.form-custom-table tr th,
+.form-custom-table tr td {
+  max-width: 50px;
+}
+.form-custom-table tr th input,
+.form-custom-table tr td input {
+  max-width: 100%;
+}
