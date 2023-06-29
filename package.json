@@ -1,0 +1,18 @@
+{
+  "name": "woo-optical",
+  "version": "1.0.0",
+  "description": "Plugin for managing options and prices for optical health products.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle": "gulp zip"
+  },
+  "author": "Artness Company",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp-zip": "^5.1.0"
+  },
+  "dependencies": {
+    "gulp": "^4.0.2"
+  }
+}
