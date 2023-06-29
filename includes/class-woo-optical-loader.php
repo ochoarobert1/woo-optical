@@ -11,11 +11,12 @@
  * @subpackage Woo_Optical/includes
  * @author     Artness Company <info@artnessco.cl>
  */
+
 class Woo_Optical_Loader
 {
-
 	protected $actions;
 	protected $filters;
+	protected $shortcodes;
 
 	/**
 	 * Method __construct
@@ -27,6 +28,7 @@ class Woo_Optical_Loader
 
 		$this->actions = array();
 		$this->filters = array();
+		$this->shortcodes = array();
 	}
 
 	/**
@@ -44,7 +46,6 @@ class Woo_Optical_Loader
 	{
 		$this->actions = $this->add($this->actions, $hook, $component, $callback, $priority, $accepted_args);
 	}
-
 
 	/**
 	 * Method add_filter
@@ -89,6 +90,22 @@ class Woo_Optical_Loader
 	}
 
 	/**
+	 * Method add_shortcode
+	 *
+	 * @param $hook $hook [explicite description]
+	 * @param $component $component [explicite description]
+	 * @param $callback $callback [explicite description]
+	 * @param $priority $priority [explicite description]
+	 * @param $accepted_args $accepted_args [explicite description]
+	 *
+	 * @return void
+	 */
+	public function add_shortcode($hook, $component, $callback, $priority = 10, $accepted_args = 1)
+	{
+		$this->shortcodes = $this->add($this->shortcodes, $hook, $component, $callback, $priority, $accepted_args);
+	}
+
+	/**
 	 * Method run
 	 *
 	 * @return void
@@ -102,6 +119,10 @@ class Woo_Optical_Loader
 
 		foreach ($this->actions as $hook) {
 			add_action($hook['hook'], array($hook['component'], $hook['callback']), $hook['priority'], $hook['accepted_args']);
+		}
+
+		foreach ($this->shortcodes as $hook) {
+			add_shortcode($hook['hook'], array($hook['component'], $hook['callback']));
 		}
 	}
 }
