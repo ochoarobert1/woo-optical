@@ -81,6 +81,13 @@ class Woo_Optical
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+
+		$this->loader->add_action('admin_menu', $plugin_admin, 'woo_optical_admin_menu');
+		$this->loader->add_action('admin_init', $plugin_admin, 'woo_optical_register_settings');
+
+		$this->loader->add_action('admin_post_woo_optical_generate_report', $plugin_admin, 'woo_optical_generate_sales_report');
+
+		$this->loader->add_shortcode('woo_optical_report', $plugin_admin, 'woo_optical_report_shortcode');
 	}
 
 	/**
@@ -95,7 +102,11 @@ class Woo_Optical
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+
+		$this->loader->add_action('woocommerce_before_add_to_cart_button', $plugin_public, 'woo_optical_add_custom_table');
+		$this->loader->add_action('woocommerce_before_calculate_totals', $plugin_public, 'woo_optical_update_product');
 	}
+
 
 	/**
 	 * Method run
